@@ -364,7 +364,11 @@ fn js_str(s: &str) -> String {
                 o.push(c);
             }
             '\n' => o.push_str("\\n"),
-            c => o.push(c),
+            c if c.is_ascii() => o.push(c),
+            c => {
+                let code = c as u32;
+                let _ = write!(o, "\\u{:04x}", code);
+            }
         }
     }
     o.push('"');
